@@ -1,9 +1,12 @@
 import { useState } from 'react'
 import { useCharacters, sortedCharacters } from '../hooks/useCharacters';
+import { useFavorites } from '../hooks/useFavorites';
 import { ArrowUpAZ, ArrowDownAZ } from 'lucide-react';
+import { HeartButton } from '../components/HeartButton';
 
 export default function HomePage() {
   const { loading, error, data } = useCharacters();
+  const { toggleFavorite, isFavorite, filterFavorites } = useFavorites();
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc');
 
   if (loading) return <p className="text-center mt-4">Loading...</p>;
@@ -12,9 +15,31 @@ export default function HomePage() {
   return (
     <div className="p-4">
       <h1 className="text-2xl font-bold mb-6">Rick and Morty list</h1>
-      <h2 className="text-xs font-semibold text-gray-500 mb-4">
-        STARRED CHARACTERS ({data?.characters.results.length ?? 0})
-      </h2>
+      {data?.characters.results && filterFavorites(data.characters.results).length > 0 && (
+        <div className="mb-6">
+          <h2 className="text-xs font-semibold text-gray-500 mb-4">
+            STARRED CHARACTERS ({filterFavorites(data.characters.results).length})
+          </h2>
+          <ul className="list-none p-0">
+            {sortedCharacters(filterFavorites(data.characters.results), sortOrder).map((character) => (
+              <li key={character.id} className="flex items-center mb-4 border-b border-gray-300 pb-4">
+                <img src={character.image} alt={character.name} width={32} height={32} className="rounded-full mr-4" />
+                <div className="flex-grow">
+                  <strong className="block text-sm">{character.name}</strong>
+                  <div className="text-gray-500 text-sm">
+                    {character.species} – {character.status} – {character.gender}
+                  </div>
+                </div>
+                <HeartButton
+                  characterId={character.id}
+                  isFavorite={isFavorite(character.id)}
+                  onToggle={toggleFavorite}
+                />
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
       <div className="flex items-center justify-between mb-4">
         <h2 className="text-xs font-semibold text-gray-500">
           CHARACTERS ({data?.characters.results.length ?? 0})
@@ -32,15 +57,20 @@ export default function HomePage() {
         </button>
       </div>
       <ul className="list-none p-0">
-        {sortedCharacters(data?.characters.results || [], sortOrder).map((character) => (
+        {sortedCharacters(data?.characters.results?.filter(char => !isFavorite(char.id)) || [], sortOrder).map((character) => (
           <li key={character.id} className="flex items-center mb-4 border-b border-gray-300 pb-4">
             <img src={character.image} alt={character.name} width={32} height={32} className="rounded-full mr-4" />
-            <div>
+            <div className="flex-grow">
               <strong className="block text-sm">{character.name}</strong>
               <div className="text-gray-500 text-sm">
                 {character.species} – {character.status} – {character.gender}
               </div>
             </div>
+            <HeartButton
+              characterId={character.id}
+              isFavorite={isFavorite(character.id)}
+              onToggle={toggleFavorite}
+            />
           </li>
         ))}
       </ul>
