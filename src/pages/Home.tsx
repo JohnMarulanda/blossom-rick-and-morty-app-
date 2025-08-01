@@ -3,18 +3,25 @@ import { useCharacters, sortedCharacters } from '../hooks/useCharacters';
 import { useFavorites } from '../hooks/useFavorites';
 import { ArrowUpAZ, ArrowDownAZ } from 'lucide-react';
 import { HeartButton } from '../components/HeartButton';
+import { SearchField } from '../components/SearchField';	
 
 export default function HomePage() {
   const { loading, error, data } = useCharacters();
   const { toggleFavorite, isFavorite, filterFavorites } = useFavorites();
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc');
+  const [searchQuery, setSearchQuery] = useState('');
 
   if (loading) return <p className="text-center mt-4">Loading...</p>;
   if (error) return <p className="text-center mt-4 text-red-600">Error: {error.message}</p>;
 
   return (
     <div className="p-4">
-      <h1 className="text-2xl font-bold mb-6">Rick and Morty list</h1>
+      <h1 className="text-2xl font-bold pt-6">Rick and Morty list</h1>
+      <SearchField
+        value={searchQuery}
+        onChange={setSearchQuery}
+        onFilterClick={() => filterFavorites(data?.characters.results || [])}
+      />
       {data?.characters.results && filterFavorites(data.characters.results).length > 0 && (
         <div className="mb-6">
           <h2 className="text-xs font-semibold text-gray-500 mb-4">
