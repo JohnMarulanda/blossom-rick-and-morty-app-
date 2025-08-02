@@ -19,7 +19,7 @@ export const HeartButton: React.FC<HeartButtonProps> = ({
   return (
     <button
       onClick={handleClick}
-      className="p-2 rounded-full hover:bg-gray-100 transition-colors"
+      className="p-1 rounded-full bg-gray-100 transition-colors"
       aria-label={isFavorite ? 'Remove from favorites' : 'Add to favorites'}
     >
       <Heart
