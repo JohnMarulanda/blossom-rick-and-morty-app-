@@ -15,7 +15,7 @@ export function SearchField({ value, onChange, onFilterClick }: SearchFieldProps
           type="text"
           value={value}
           onChange={(e) => onChange(e.target.value)}
-          placeholder="Buscar por nombre de personaje"
+          placeholder="Search or filter results"
           className="w-full pl-10 pr-4 py-2 rounded-lg border border-gray-200 focus:outline-none focus:border-primary-600 text-sm"
         />
       </div>
