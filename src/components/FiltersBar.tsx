@@ -12,7 +12,7 @@ interface FiltersBarProps {
   genderFilter: string;
   setGenderFilter: (value: string) => void;
   onApplyFilters: () => void;
-  onClearFilters: () => void;
+  hasActiveFilters: boolean;
 }
 
 export function FiltersBar({
@@ -27,7 +27,7 @@ export function FiltersBar({
   genderFilter,
   setGenderFilter,
   onApplyFilters,
-  onClearFilters,
+  hasActiveFilters,
 }: FiltersBarProps) {
   if (!isOpen) return null;
 
@@ -66,16 +66,14 @@ export function FiltersBar({
   }) => (
     <div className="mb-6">
       <h3 className="text-sm font-medium text-gray-700 mb-3">{title}</h3>
-      <div className="flex flex-wrap gap-2">
+      <div className="grid grid-cols-3 gap-2">
         {options.map((option) => (
           <button
             key={option.value}
             onClick={() => onChange(option.value)}
-            className={`px-4 py-2 rounded-full text-sm transition-colors ${
-              value === option.value
-                ? 'bg-primary-600 text-white'
-                : 'bg-primary-100 text-primary-700 hover:bg-primary-600 hover:text-white'
-            }`}
+            className={`px-3 py-2 rounded-xl text-sm font-medium transition-all duration-200 ${value === option.value
+              ? 'bg-primary-100 text-primary-600'
+              : 'bg-white text-gray-600 hover:bg-gray-50 border border-gray-200'}`}
           >
             {option.label}
           </button>
@@ -85,19 +83,19 @@ export function FiltersBar({
   );
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
-      <div className="bg-white rounded-lg shadow-xl w-full max-w-md max-h-[80vh] overflow-y-auto">
-        <div className="sticky top-0 bg-white border-b border-gray-200 p-4 flex items-center justify-between">
-          <h2 className="text-lg font-semibold text-gray-900">Filtros</h2>
+    <div className="relative bg-white rounded-lg shadow-lg border border-gray-200 mt-2 z-50">
+      <div className="p-4">
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="text-lg font-semibold text-gray-900">Filters</h2>
           <button
             onClick={onClose}
-            className="p-1 text-gray-400 hover:text-gray-600 transition-colors"
+            className="p-1 text-gray-400 hover:text-gray-600 transition-colors rounded-full hover:bg-gray-100"
           >
             <X className="w-5 h-5" />
           </button>
         </div>
         
-        <div className="p-4">
+        <div className="space-y-4 mb-6">
           <FilterSection
             title="Character"
             options={characterOptions}
@@ -106,14 +104,14 @@ export function FiltersBar({
           />
           
           <FilterSection
-            title="Species"
+            title="Specie"
             options={speciesOptions}
             value={speciesFilter}
             onChange={setSpeciesFilter}
           />
           
           <FilterSection
-            title="Status"
+            title="State"
             options={statusOptions}
             value={statusFilter}
             onChange={setStatusFilter}
@@ -126,22 +124,19 @@ export function FiltersBar({
             onChange={setGenderFilter}
           />
         </div>
-        
-        <div className="sticky bottom-0 bg-white border-t border-gray-200 p-4 flex gap-3">
-          <button
-            onClick={onClearFilters}
-            className="flex-1 px-4 py-2 text-primary-600 border border-primary-600 rounded-lg hover:bg-primary-100 transition-colors"
-          >
-            Limpiar
-          </button>
+        <div className="sticky bottom-0 bg-white border-t border-gray-200 p-4">
           <button
             onClick={() => {
               onApplyFilters();
               onClose();
             }}
-            className="flex-1 px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors"
+            className={`w-full px-4 py-2.5 text-sm font-medium rounded-lg transition-all duration-200 focus:outline-none focus:ring-2 ${
+              hasActiveFilters
+                ? 'bg-primary-600 text-white hover:bg-primary-700 focus:ring-primary-200'
+                : 'bg-gray-100 text-gray-600 hover:bg-gray-200 focus:ring-gray-200'
+            }`}
           >
-            Filtrar
+            Filter
           </button>
         </div>
       </div>
