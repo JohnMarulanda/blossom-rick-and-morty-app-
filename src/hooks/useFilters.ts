@@ -11,39 +11,58 @@ interface Character {
 
 export const useFilters = () => {
   const [search, setSearch] = useState('');
-  const [characterFilter, setCharacterFilter] = useState('all');
-  const [statusFilter, setStatusFilter] = useState('all');
-  const [speciesFilter, setSpeciesFilter] = useState('all');
-  const [genderFilter, setGenderFilter] = useState('all');
+  
+  const [pendingCharacterFilter, setPendingCharacterFilter] = useState('all');
+  const [pendingStatusFilter, setPendingStatusFilter] = useState('all');
+  const [pendingSpeciesFilter, setPendingSpeciesFilter] = useState('all');
+  const [pendingGenderFilter, setPendingGenderFilter] = useState('all');
+  
+  const [appliedCharacterFilter, setAppliedCharacterFilter] = useState('all');
+  const [appliedStatusFilter, setAppliedStatusFilter] = useState('all');
+  const [appliedSpeciesFilter, setAppliedSpeciesFilter] = useState('all');
+  const [appliedGenderFilter, setAppliedGenderFilter] = useState('all');
 
   const clearFilters = () => {
     setSearch('');
-    setCharacterFilter('all');
-    setStatusFilter('all');
-    setSpeciesFilter('all');
-    setGenderFilter('all');
+    setPendingCharacterFilter('all');
+    setPendingStatusFilter('all');
+    setPendingSpeciesFilter('all');
+    setPendingGenderFilter('all');
+    setAppliedCharacterFilter('all');
+    setAppliedStatusFilter('all');
+    setAppliedSpeciesFilter('all');
+    setAppliedGenderFilter('all');
   };
 
-  const applyFilters = (characters: Character[], favorites: number[]) => {
+  const applyPendingFilters = () => {
+    setAppliedCharacterFilter(pendingCharacterFilter);
+    setAppliedStatusFilter(pendingStatusFilter);
+    setAppliedSpeciesFilter(pendingSpeciesFilter);
+    setAppliedGenderFilter(pendingGenderFilter);
+  };
+
+  const hasActiveFilters = () => {
+    return pendingCharacterFilter !== 'all' || 
+           pendingStatusFilter !== 'all' || 
+           pendingSpeciesFilter !== 'all' || 
+           pendingGenderFilter !== 'all';
+  };
+
+  const filterCharacters = (characters: Character[], favorites: number[]) => {
     return characters.filter((character) => {
-      // Filtrar por búsqueda de nombre
       const matchesSearch = search === '' || 
         character.name.toLowerCase().includes(search.toLowerCase());
 
-      // Filtrar por tipo de personaje (all, starred, others)
       const matchesCharacterFilter = 
-        characterFilter === 'all' ||
-        (characterFilter === 'starred' && favorites.includes(character.id)) ||
-        (characterFilter === 'others' && !favorites.includes(character.id));
+        appliedCharacterFilter === 'all' ||
+        (appliedCharacterFilter === 'starred' && favorites.includes(character.id)) ||
+        (appliedCharacterFilter === 'others' && !favorites.includes(character.id));
 
-      // Filtrar por estado
-      const matchesStatus = statusFilter === 'all' || character.status === statusFilter;
+      const matchesStatus = appliedStatusFilter === 'all' || character.status === appliedStatusFilter;
 
-      // Filtrar por especie
-      const matchesSpecies = speciesFilter === 'all' || character.species === speciesFilter;
+      const matchesSpecies = appliedSpeciesFilter === 'all' || character.species === appliedSpeciesFilter;
 
-      // Filtrar por género
-      const matchesGender = genderFilter === 'all' || character.gender === genderFilter;
+      const matchesGender = appliedGenderFilter === 'all' || character.gender === appliedGenderFilter;
 
       return matchesSearch && matchesCharacterFilter && matchesStatus && matchesSpecies && matchesGender;
     });
@@ -52,15 +71,17 @@ export const useFilters = () => {
   return {
     search,
     setSearch,
-    characterFilter,
-    setCharacterFilter,
-    statusFilter,
-    setStatusFilter,
-    speciesFilter,
-    setSpeciesFilter,
-    genderFilter,
-    setGenderFilter,
+    characterFilter: pendingCharacterFilter,
+    setCharacterFilter: setPendingCharacterFilter,
+    statusFilter: pendingStatusFilter,
+    setStatusFilter: setPendingStatusFilter,
+    speciesFilter: pendingSpeciesFilter,
+    setSpeciesFilter: setPendingSpeciesFilter,
+    genderFilter: pendingGenderFilter,
+    setGenderFilter: setPendingGenderFilter,
     clearFilters,
-    applyFilters,
+    applyFilters: filterCharacters,
+    applyPendingFilters,
+    hasActiveFilters,
   };
 };
