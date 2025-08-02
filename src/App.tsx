@@ -1,19 +1,19 @@
 
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import MainLayout from './layouts/MainLayout'
 import CharacterPage from './pages/CharacterPage'
-import Home from './pages/Home'
+import DefaultCharacterView from './pages/DefaultCharacterView'
 
 function App() {
-
   return (
-    <>
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/character/:id" element={<CharacterPage />} />
-        </Routes>
-      </BrowserRouter>
-    </>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<MainLayout />}>
+          <Route index element={<DefaultCharacterView />} />
+          <Route path="character/:id" element={<CharacterPage />} />
+        </Route>
+      </Routes>
+    </BrowserRouter>
   )
 }
 
