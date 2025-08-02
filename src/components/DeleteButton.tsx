@@ -36,7 +36,7 @@ export function DeleteButton({ characterId, isDeleted, onToggle }: DeleteButtonP
     <div className="relative">
       <button
         onClick={handleClick}
-        className={`p-2 rounded-full transition-colors ${isDeleted ? 'text-primary-600 hover:bg-primary-100' : 'text-gray-400 hover:bg-gray-100'}`}
+        className={`p-1 rounded-full bg-gray-100 transition-colors ${isDeleted ? 'text-primary-600 hover:bg-gray-100' : 'text-gray-400 hover:bg-gray-100'}`}
         aria-label={isDeleted ? 'Restore character' : 'Delete character'}
       >
         {isDeleted ? (
