@@ -76,10 +76,10 @@ export function CommentBox({ characterId }: CommentBoxProps) {
                 : 'text-green-600'
           }`}>
             {newComment.trim().length === 0 
-              ? `Mínimo ${MIN_COMMENT_LENGTH} caracteres` 
+              ? `Min ${MIN_COMMENT_LENGTH} Characters` 
               : newComment.trim().length < MIN_COMMENT_LENGTH
-                ? `Faltan ${MIN_COMMENT_LENGTH - newComment.trim().length} caracteres`
-                : 'Listo para enviar'}
+                ? `Missing ${MIN_COMMENT_LENGTH - newComment.trim().length} characters`
+                : 'Ready to send'}
           </span>
           <span className={`${
             newComment.length > MAX_COMMENT_LENGTH ? 'text-red-500' : 'text-gray-500'
