@@ -507,8 +507,9 @@ Este proyecto está bajo la Licencia MIT. Ver el archivo `LICENSE` para más det
 - [Rick and Morty API](https://rickandmortyapi.com/) por proporcionar la API GraphQL
 - [Blossom](https://www.blossom.net/) por la oportunidad de seguir creciendo
 
+---
 
-# ✅ Checklist de Evaluación - Frontend Developer (Rick & Morty App)
+## ✅ Checklist de Evaluación - Frontend Developer (Rick & Morty App)
 
 ## 🔹 Tecnologías obligatorias
 
