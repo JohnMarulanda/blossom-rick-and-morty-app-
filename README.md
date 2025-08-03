@@ -35,7 +35,7 @@ Una aplicación React que consume la API GraphQL de Rick and Morty, permitiendo 
 ### 1. Clonar el repositorio
 ```bash
 git clone https://github.com/JohnMarulanda/blossom-rick-and-morty-app-.git
-cd blossom-rick-and-morty-app
+cd blossom-rick-and-morty-app-
 ```
 
 ### 2. Instalar dependencias
