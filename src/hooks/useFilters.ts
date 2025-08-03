@@ -1,5 +1,6 @@
 import { useState } from 'react';
 
+// Interfaz que representa un personaje
 interface Character {
   id: number;
   name: string;
@@ -9,21 +10,32 @@ interface Character {
   image: string;
 }
 
+/**
+ * Hook personalizado para gestionar filtros de búsqueda y atributos de personajes.
+ * Permite separar filtros pendientes (aún no aplicados) y filtros ya aplicados.
+ */
 export const useFilters = () => {
+  // Estado para búsqueda por nombre
   const [search, setSearch] = useState('');
-  
-  const [pendingCharacterFilter, setPendingCharacterFilter] = useState('all');
+
+  // Filtros pendientes (no aplicados aún)
+  const [pendingCharacterFilter, setPendingCharacterFilter] = useState('all'); // 'all' | 'starred' | 'others'
   const [pendingStatusFilter, setPendingStatusFilter] = useState('all');
   const [pendingSpeciesFilter, setPendingSpeciesFilter] = useState('all');
   const [pendingGenderFilter, setPendingGenderFilter] = useState('all');
-  
+
+  // Filtros aplicados (usados en el filtrado real)
   const [appliedCharacterFilter, setAppliedCharacterFilter] = useState('all');
   const [appliedStatusFilter, setAppliedStatusFilter] = useState('all');
   const [appliedSpeciesFilter, setAppliedSpeciesFilter] = useState('all');
   const [appliedGenderFilter, setAppliedGenderFilter] = useState('all');
 
+  // Indica si los filtros han sido aplicados o no
   const [filtersApplied, setFiltersApplied] = useState(false);
 
+  /**
+   * Restablece todos los filtros y búsqueda a su estado inicial.
+   */
   const clearFilters = () => {
     setSearch('');
     setPendingCharacterFilter('all');
@@ -37,6 +49,9 @@ export const useFilters = () => {
     setFiltersApplied(false);
   };
 
+  /**
+   * Aplica los filtros pendientes, pasando su estado a los filtros aplicados.
+   */
   const applyPendingFilters = () => {
     setAppliedCharacterFilter(pendingCharacterFilter);
     setAppliedStatusFilter(pendingStatusFilter);
@@ -45,13 +60,26 @@ export const useFilters = () => {
     setFiltersApplied(true);
   };
 
+  /**
+   * Retorna `true` si hay algún filtro pendiente diferente de 'all'.
+   */
   const hasActiveFilters = () => {
-    return pendingCharacterFilter !== 'all' || 
-           pendingStatusFilter !== 'all' || 
-           pendingSpeciesFilter !== 'all' || 
-           pendingGenderFilter !== 'all';
+    return (
+      pendingCharacterFilter !== 'all' || 
+      pendingStatusFilter !== 'all' || 
+      pendingSpeciesFilter !== 'all' || 
+      pendingGenderFilter !== 'all'
+    );
   };
 
+  /**
+   * Aplica los filtros actuales (ya aplicados) a una lista de personajes.
+   * También considera favoritos y búsqueda por nombre.
+   * 
+   * @param characters Lista completa de personajes
+   * @param favorites Lista de IDs de personajes favoritos
+   * @returns Lista filtrada según criterios activos
+   */
   const filterCharacters = (characters: Character[], favorites: number[]) => {
     return characters.filter((character) => {
       const matchesSearch = search === '' || 
@@ -62,19 +90,36 @@ export const useFilters = () => {
         (appliedCharacterFilter === 'starred' && favorites.includes(character.id)) ||
         (appliedCharacterFilter === 'others' && !favorites.includes(character.id));
 
-      const matchesStatus = appliedStatusFilter === 'all' || character.status === appliedStatusFilter;
+      const matchesStatus = 
+        appliedStatusFilter === 'all' || 
+        character.status === appliedStatusFilter;
 
-      const matchesSpecies = appliedSpeciesFilter === 'all' || character.species === appliedSpeciesFilter;
+      const matchesSpecies = 
+        appliedSpeciesFilter === 'all' || 
+        character.species === appliedSpeciesFilter;
 
-      const matchesGender = appliedGenderFilter === 'all' || character.gender === appliedGenderFilter;
+      const matchesGender = 
+        appliedGenderFilter === 'all' || 
+        character.gender === appliedGenderFilter;
 
-      return matchesSearch && matchesCharacterFilter && matchesStatus && matchesSpecies && matchesGender;
+      // Solo se incluye si cumple con todos los criterios
+      return (
+        matchesSearch && 
+        matchesCharacterFilter && 
+        matchesStatus && 
+        matchesSpecies && 
+        matchesGender
+      );
     });
   };
 
+  // Valores y funciones que se exponen desde el hook
   return {
+    // Búsqueda
     search,
     setSearch,
+
+    // Filtros pendientes
     characterFilter: pendingCharacterFilter,
     setCharacterFilter: setPendingCharacterFilter,
     statusFilter: pendingStatusFilter,
@@ -83,10 +128,14 @@ export const useFilters = () => {
     setSpeciesFilter: setPendingSpeciesFilter,
     genderFilter: pendingGenderFilter,
     setGenderFilter: setPendingGenderFilter,
+
+    // Funciones
     clearFilters,
     applyFilters: filterCharacters,
     applyPendingFilters,
     hasActiveFilters,
+
+    // Estado de aplicación
     filtersApplied,
     setFiltersApplied
   };

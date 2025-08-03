@@ -3,25 +3,39 @@ import { Trash2, MessageCircleMore, Send } from 'lucide-react';
 import { useComments } from '../hooks/useComments';
 
 type CommentBoxProps = {
-  characterId: string;
+  characterId: string; // ID del personaje al que se asociarán los comentarios
 };
 
+/**
+ * Componente que muestra una caja de comentarios interactiva.
+ * Permite agregar, listar y eliminar comentarios relacionados con un personaje.
+ */
 export function CommentBox({ characterId }: CommentBoxProps) {
-  const [newComment, setNewComment] = useState('');
-  const { comments, addComment, deleteComment } = useComments(characterId);
+  const [newComment, setNewComment] = useState(''); // Comentario que el usuario está escribiendo
+  const [error, setError] = useState('');           // Mensaje de error al agregar comentario
+  const { comments, addComment, deleteComment } = useComments(characterId); // Hook personalizado
 
+  // Maneja el envío del formulario
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (newComment.trim()) {
-      addComment(newComment.trim());
-      setNewComment('');
+      try {
+        addComment(newComment.trim()); // Intenta agregar comentario
+        setNewComment('');
+        setError('');
+      } catch (err) {
+        // Si hay error (ej. excede el límite de caracteres), lo muestra
+        setError(err instanceof Error ? err.message : 'Error al agregar comentario');
+      }
     }
   };
 
   return (
     <div className="mt-8">
       <h2 className="text-base font-semibold mb-4">Comments</h2>
-      <form onSubmit={handleSubmit} className="mb-6">
+
+      {/* Formulario de entrada de comentario */}
+      <form onSubmit={handleSubmit} className="mb-6" role="form">
         <div className="flex gap-2 relative">
           <MessageCircleMore className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
           <input
@@ -41,6 +55,14 @@ export function CommentBox({ characterId }: CommentBoxProps) {
         </div>
       </form>
 
+      {/* Mensaje de error si existe */}
+      {error && (
+        <div className="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded-lg">
+          {error}
+        </div>
+      )}
+
+      {/* Lista de comentarios */}
       <div className="space-y-4">
         {comments.length === 0 ? (
           <p className="text-gray-500 text-center py-4">No comments yet</p>
@@ -58,6 +80,7 @@ export function CommentBox({ characterId }: CommentBoxProps) {
                 </button>
               </div>
               <p className="text-xs text-gray-500">
+                {/* Fecha formateada */}
                 {new Date(comment.createdAt).toLocaleDateString('es-ES', {
                   year: 'numeric',
                   month: 'long',

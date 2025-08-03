@@ -10,14 +10,26 @@ import { SearchField } from '../components/SearchField';
 import { FiltersBar } from '../components/FiltersBar';
 import { DeleteButton } from '../components/DeleteButton';
 
+/**
+ * Página principal que muestra la lista de personajes de Rick and Morty.
+ * Incluye funcionalidades de búsqueda, filtros avanzados, favoritos y eliminación suave.
+ */
 export default function HomePage() {
+  // Carga datos desde la API
   const { loading, error, data } = useCharacters();
+
+  // Maneja lógica de favoritos
   const { toggleFavorite, isFavorite, favorites } = useFavorites();
+
+  // Maneja eliminación suave (soft delete)
   const { toggleDelete, isDeleted, filterDeletedCharacters } = useSoftDelete();
+
+  // Estado local para ordenar, mostrar filtros y personajes eliminados
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc');
   const [isFiltersOpen, setIsFiltersOpen] = useState(false);
   const [showDeleted, setShowDeleted] = useState(false);
 
+  // Filtros avanzados personalizados
   const {
     search,
     setSearch,
@@ -37,6 +49,7 @@ export default function HomePage() {
     clearFilters,
   } = useFilters();
 
+  // Muestra un spinner si los datos aún están cargando
   if (loading) return (
     <div className="flex flex-col items-center justify-center mt-8">
       <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-600 mb-4"></div>
@@ -44,6 +57,7 @@ export default function HomePage() {
     </div>
   );
 
+  // Muestra mensaje de error si falla la carga
   if (error) return (
     <div className="flex flex-col items-center justify-center mt-8 p-6">
       <div className="bg-red-50 border border-red-200 rounded-lg p-4 max-w-md">
@@ -65,6 +79,7 @@ export default function HomePage() {
     </div>
   );
 
+  // Procesamiento de personajes
   const allCharacters = data?.characters.results || [];
   const nonDeletedCharacters = filterDeletedCharacters(allCharacters);
   const filteredCharacters = applyFilters(nonDeletedCharacters, favorites);
@@ -77,6 +92,7 @@ export default function HomePage() {
     <div className="p-4">
       <h1 className="text-2xl font-bold pt-6">Rick and Morty list</h1>
 
+      {/* Campo de búsqueda y filtros */}
       {!filtersApplied ? (
         <>
           <SearchField
@@ -102,6 +118,7 @@ export default function HomePage() {
           />
         </>
       ) : (
+        // Header cuando los filtros avanzados están aplicados
         <div className="mt-4 mb-6">
           <div className="flex items-center w-[100%] text-center justify-between border-b pb-2">
             <button 
@@ -125,10 +142,10 @@ export default function HomePage() {
               <h3 className="text-base text-right" style={{ color: "rgb(128, 84, 199)" }}>Done</h3>
             </button>
           </div>
-          
-
         </div>
       )}
+
+      {/* Indicadores de filtros aplicados */}
       <div className="flex justify-between gap-2 mb-4">
         {hasActiveFilters() && (
           <div className="text-xs font-medium text-blue-600">
@@ -142,6 +159,7 @@ export default function HomePage() {
         )}
       </div>
 
+      {/* Lista de personajes favoritos */}
       {starredCharacters.length > 0 && (
         <div className="mb-6">
           <h2 className="text-xs font-semibold text-gray-500 mb-4">
@@ -149,8 +167,8 @@ export default function HomePage() {
           </h2>
           <ul className="list-none p-0">
             {sortedCharacters(starredCharacters, sortOrder).map((character) => (
-              <li key={character.id} className="mb-4 border-b border-gray-300 pb-4">
-                <div className="flex items-center flex-grow hover:bg-primary-100 p-2 rounded-lg transition-colors">
+              <li key={character.id} className="border-b border-gray-300">
+                <div className="flex items-center flex-grow hover:bg-primary-100 p-4 rounded-lg transition-colors">
                   <Link
                     to={`/character/${character.id}`}
                     className="flex items-center flex-grow"
@@ -161,7 +179,6 @@ export default function HomePage() {
                       <div className="text-gray-500 text-sm">{character.species}</div>
                     </div>
                   </Link>
-
                   <div className="flex items-center gap-2 ml-2">
                     <HeartButton
                       characterId={character.id}
@@ -175,45 +192,56 @@ export default function HomePage() {
                     />
                   </div>
                 </div>
-
               </li>
             ))}
           </ul>
         </div>
       )}
 
-      <div className="flex items-center justify-between mb-4">
-        <h2 className="text-xs font-semibold text-gray-500">
-          CHARACTERS ({otherCharacters.length})
-        </h2>
-        <button
-          onClick={() => setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc')}
-          className="flex items-center gap-2 px-3 py-1 text-sm text-gray-600 hover:bg-gray-100 rounded-md transition-colors"
-        >
-          {sortOrder === 'asc' ? (
-            <ArrowUpAZ className="w-4 h-4" />
-          ) : (
-            <ArrowDownAZ className="w-4 h-4" />
-          )}
-          <span className="text-xs">{sortOrder === 'asc' ? 'A-Z' : 'Z-A'}</span>
-        </button>
-      </div>
+      {/* Mensaje cuando no hay resultados */}
+      {!starredCharacters.length && !otherCharacters.length && (
+        <div className="flex flex-col items-center justify-center py-12 text-center">
+          <img 
+            src="/LogoRick.svg" 
+            alt="Rick" 
+            className="w-16 h-16 mb-4 opacity-60"
+          />
+          <p className="text-sm text-gray-500">
+            No characters match your criteria.
+          </p>
+          <p className="text-xs text-gray-400 mt-1">
+            Try adjusting your filters or search terms.
+          </p>
+        </div>
+      )}
 
-      <ul className="list-none p-0">
+      {/* Lista de otros personajes (no favoritos ni eliminados) */}
+      {otherCharacters.length > 0 && (
+        <>
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-xs font-semibold text-gray-500">
+              CHARACTERS ({otherCharacters.length})
+            </h2>
+            <button
+              onClick={() => setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc')}
+              className="flex items-center gap-2 px-3 py-1 text-sm text-gray-600 hover:bg-gray-100 rounded-md transition-colors"
+            >
+              {sortOrder === 'asc' ? <ArrowUpAZ className="w-4 h-4" /> : <ArrowDownAZ className="w-4 h-4" />}
+              <span className="text-xs">{sortOrder === 'asc' ? 'A-Z' : 'Z-A'}</span>
+            </button>
+          </div>
+
+          <ul className="list-none p-0">
         {sortedCharacters(otherCharacters, sortOrder).map((character) => (
-          <li key={character.id} className="mb-4 border-b border-gray-300 pb-4">
-            <div className="flex items-center flex-grow hover:bg-primary-100 p-2 rounded-lg transition-colors">
-              <Link
-                to={`/character/${character.id}`}
-                className="flex items-center flex-grow"
-              >
+          <li key={character.id} className="border-b border-gray-300">
+            <div className="flex items-center flex-grow hover:bg-primary-100 p-4 rounded-lg transition-colors">
+              <Link to={`/character/${character.id}`} className="flex items-center flex-grow">
                 <img src={character.image} alt={character.name} width={32} height={32} className="rounded-full mr-4" />
                 <div className="flex-grow">
                   <strong className="block text-sm">{character.name}</strong>
                   <div className="text-gray-500 text-sm">{character.species}</div>
                 </div>
               </Link>
-
               <div className="flex items-center gap-2 ml-2">
                 <HeartButton
                   characterId={character.id}
@@ -227,11 +255,13 @@ export default function HomePage() {
                 />
               </div>
             </div>
-
           </li>
         ))}
-      </ul>
+          </ul>
+        </>
+      )}
 
+      {/* Lista de personajes eliminados (opcionalmente visible) */}
       {deletedCharacters.length > 0 && (
         <div className="mt-8">
           <div className="flex items-center justify-between mb-4">
@@ -259,35 +289,25 @@ export default function HomePage() {
             </button>
           </div>
 
+          {/* Lista de personajes eliminados */}
           {showDeleted && (
             <ul className="list-none p-0">
               {deletedCharacters.map((character) => (
-                <li key={character.id} className="mb-4 border-b border-gray-300 pb-4">
-                  <div className="flex items-center hover:bg-primary-100 p-2 rounded-lg transition-colors">
-                    <Link
-                      to={`/character/${character.id}`}
-                      className="flex items-center flex-grow"
-                    >
-                      <img
-                        src={character.image}
-                        alt={character.name}
-                        width={32}
-                        height={32}
-                        className="rounded-full mr-4"
-                      />
+                <li key={character.id} className="border-b border-gray-300">
+                  <div className="flex items-center hover:bg-primary-100 p-4 rounded-lg transition-colors">
+                    <Link to={`/character/${character.id}`} className="flex items-center flex-grow">
+                      <img src={character.image} alt={character.name} width={32} height={32} className="rounded-full mr-4" />
                       <div className="flex-grow">
                         <strong className="block text-sm">{character.name}</strong>
                         <div className="text-gray-500 text-sm">{character.species}</div>
                       </div>
                     </Link>
-
                     <DeleteButton
                       characterId={character.id}
                       isDeleted={isDeleted(character.id)}
                       onToggle={toggleDelete}
                     />
                   </div>
-
                 </li>
               ))}
             </ul>

@@ -1,20 +1,24 @@
 import { X, ArrowLeft } from 'lucide-react';
 
 interface FiltersBarProps {
-  isOpen: boolean;
-  onClose: () => void;
-  characterFilter: string;
+  isOpen: boolean;                       // Si el panel está abierto o no
+  onClose: () => void;                   // Función para cerrar el panel
+  characterFilter: string;               // Filtro actual para personajes (ej. 'all', 'starred')
   setCharacterFilter: (value: string) => void;
-  speciesFilter: string;
+  speciesFilter: string;                 // Filtro actual para especie
   setSpeciesFilter: (value: string) => void;
-  statusFilter: string;
+  statusFilter: string;                  // Filtro actual para estado
   setStatusFilter: (value: string) => void;
-  genderFilter: string;
+  genderFilter: string;                  // Filtro actual para género
   setGenderFilter: (value: string) => void;
-  onApplyFilters: () => void;
-  hasActiveFilters: boolean;
+  onApplyFilters: () => void;            // Función para aplicar los filtros seleccionados
+  hasActiveFilters: boolean;             // Indica si hay filtros activos (para activar botón)
 }
 
+/**
+ * Componente visual que presenta un panel lateral o emergente para aplicar filtros
+ * sobre una lista de personajes. Es adaptable a escritorio y móvil.
+ */
 export function FiltersBar({
   isOpen,
   onClose,
@@ -29,8 +33,10 @@ export function FiltersBar({
   onApplyFilters,
   hasActiveFilters,
 }: FiltersBarProps) {
+  // Si no está abierto, no renderiza nada
   if (!isOpen) return null;
 
+  // Opciones disponibles para cada filtro
   const characterOptions = [
     { value: 'all', label: 'All' },
     { value: 'starred', label: 'Starred' },
@@ -58,7 +64,15 @@ export function FiltersBar({
     { value: 'unknown', label: 'Unknown' },
   ];
 
-  const FilterSection = ({ title, options, value, onChange }: {
+  /**
+   * Subcomponente reutilizable para secciones de filtros
+   */
+  const FilterSection = ({
+    title,
+    options,
+    value,
+    onChange,
+  }: {
     title: string;
     options: { value: string; label: string }[];
     value: string;
@@ -71,9 +85,11 @@ export function FiltersBar({
           <button
             key={option.value}
             onClick={() => onChange(option.value)}
-            className={`px-3 py-2 rounded-xl text-sm font-medium transition-all duration-200 ${value === option.value
-              ? 'bg-primary-100 text-primary-600'
-              : 'bg-white text-gray-600 hover:bg-gray-50 border border-gray-200'}`}
+            className={`px-3 py-2 rounded-xl text-sm font-medium transition-all duration-200 ${
+              value === option.value
+                ? 'bg-primary-100 text-primary-600'
+                : 'bg-white text-gray-600 hover:bg-gray-50 border border-gray-200'
+            }`}
           >
             {option.label}
           </button>
@@ -82,12 +98,18 @@ export function FiltersBar({
     </div>
   );
 
-
   const isMobile = window.innerWidth < 768;
 
   return (
-    <div className={`bg-white z-50 ${isMobile ? 'fixed inset-0 overflow-y-auto' : 'relative rounded-lg shadow-lg border border-gray-200 mt-2'}`}>
+    <div
+      className={`bg-white z-50 ${
+        isMobile
+          ? 'fixed inset-0 overflow-y-auto'
+          : 'relative rounded-lg shadow-lg border border-gray-200 mt-2'
+      }`}
+    >
       <div className="p-4">
+        {/* Encabezado con botón para cerrar */}
         <div className="flex items-center justify-between mb-4 relative">
           <div className="flex items-center justify-center w-full relative">
             {isMobile && (
@@ -101,16 +123,19 @@ export function FiltersBar({
             )}
             <h2 className="flex text-lg font-semibold text-gray-900">Filters</h2>
           </div>
+
           {!isMobile && (
             <button
               onClick={onClose}
               className="absolute right-4 top-4 p-1 text-gray-400 hover:text-gray-600 transition-colors rounded-full hover:bg-gray-100"
+              aria-label="Cerrar filtros"
             >
               <X className="w-5 h-5" />
             </button>
           )}
         </div>
-        
+
+        {/* Secciones de filtros */}
         <div className="space-y-4 mb-6">
           <FilterSection
             title="Character"
@@ -118,21 +143,18 @@ export function FiltersBar({
             value={characterFilter}
             onChange={setCharacterFilter}
           />
-          
           <FilterSection
             title="Specie"
             options={speciesOptions}
             value={speciesFilter}
             onChange={setSpeciesFilter}
           />
-          
           <FilterSection
             title="State"
             options={statusOptions}
             value={statusFilter}
             onChange={setStatusFilter}
           />
-          
           <FilterSection
             title="Gender"
             options={genderOptions}
@@ -140,6 +162,8 @@ export function FiltersBar({
             onChange={setGenderFilter}
           />
         </div>
+
+        {/* Botón de aplicar filtros */}
         <div className="sticky bottom-0 bg-white border-t border-gray-200 p-4">
           <div className="flex gap-3">
             <button
