@@ -21,7 +21,7 @@ export function CommentBox({ characterId }: CommentBoxProps) {
   return (
     <div className="mt-8">
       <h2 className="text-base font-semibold mb-4">Comments</h2>
-      <form onSubmit={handleSubmit} className="mb-6">
+      <form onSubmit={handleSubmit} className="mb-6" role="form">
         <div className="flex gap-2 relative">
           <MessageCircleMore className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
           <input
