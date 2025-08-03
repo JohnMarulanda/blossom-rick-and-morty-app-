@@ -1,13 +1,20 @@
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { useCharacter } from '../hooks/useCharacters';
 import { useFavorites } from '../hooks/useFavorites';
 import { HeartButton } from '../components/HeartButton';
 import { CommentBox } from '../components/CommentBox';
+import { ArrowLeft } from 'lucide-react';
 
 export default function CharacterPage() {
   const { id } = useParams<{ id: string }>();
   const { loading, error, character } = useCharacter(id || '');
   const { toggleFavorite, isFavorite } = useFavorites();
+  const navigate = useNavigate();
+  
+  // Función para volver a la página principal
+  const handleGoBack = () => {
+    navigate('/');
+  };
 
   if (loading) {
     return (
@@ -43,7 +50,15 @@ export default function CharacterPage() {
   }
 
   return (
-    <div className="px-24">
+    <div className="px-4 md:px-24 relative">  
+      {/* Botón de retorno (solo visible en móvil) */}
+      <button 
+        onClick={handleGoBack}
+        className="absolute top-4 left-4 p-2 rounded-full text-primary-600 hover:bg-primary-200 transition-colors md:hidden z-10 mb-2"
+        aria-label="Volver a la lista de personajes"
+      >
+        <ArrowLeft className="w-5 h-5" />
+      </button>
       <div className="flex flex-col items-start pb-4 pt-10">
         <div className="relative mb-3">
           <img
