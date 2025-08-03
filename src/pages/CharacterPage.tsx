@@ -5,17 +5,26 @@ import { HeartButton } from '../components/HeartButton';
 import { CommentBox } from '../components/CommentBox';
 import { ArrowLeft } from 'lucide-react';
 
+// Componente principal que muestra los detalles de un personaje
 export default function CharacterPage() {
+  // Obtiene el ID del personaje desde los parámetros de la URL
   const { id } = useParams<{ id: string }>();
+
+  // Hook personalizado que obtiene los datos del personaje desde la API
   const { loading, error, character } = useCharacter(id || '');
+
+  // Hook para gestionar favoritos (agregar/quitar)
   const { toggleFavorite, isFavorite } = useFavorites();
+
+  // Hook para redirigir entre páginas
   const navigate = useNavigate();
   
-  // Función para volver a la página principal
+  // Navega de vuelta a la página principal
   const handleGoBack = () => {
     navigate('/');
   };
 
+  // Renderiza un estado de carga mientras se obtienen los datos
   if (loading) {
     return (
       <div className="flex items-center justify-center h-full">
@@ -27,6 +36,7 @@ export default function CharacterPage() {
     );
   }
 
+  // Renderiza un mensaje de error si falla la petición o el personaje no existe
   if (error || !character) {
     return (
       <div className="flex items-center justify-center h-full p-8">
@@ -49,9 +59,10 @@ export default function CharacterPage() {
     );
   }
 
+  // Renderiza los detalles del personaje
   return (
     <div className="px-4 md:px-24 relative">  
-      {/* Botón de retorno (solo visible en móvil) */}
+      {/* Botón para volver atrás (visible solo en dispositivos móviles) */}
       <button 
         onClick={handleGoBack}
         className="absolute top-4 left-4 p-2 rounded-full text-primary-600 hover:bg-primary-200 transition-colors md:hidden z-10 mb-2"
@@ -59,6 +70,8 @@ export default function CharacterPage() {
       >
         <ArrowLeft className="w-5 h-5" />
       </button>
+
+      {/* Encabezado con imagen del personaje y botón de favorito */}
       <div className="flex flex-col items-start pb-4 pt-10">
         <div className="relative mb-3">
           <img
@@ -67,6 +80,7 @@ export default function CharacterPage() {
             className="w-20 h-20 rounded-full object-cover shadow-lg"
           />
           <div className="absolute -bottom-1 -right-1">
+            {/* Botón para agregar o quitar de favoritos */}
             <HeartButton
               characterId={character.id}
               isFavorite={isFavorite(character.id)}
@@ -77,6 +91,7 @@ export default function CharacterPage() {
         <h1 className="text-2xl font-bold text-gray-900">{character.name}</h1>
       </div>
 
+      {/* Información detallada del personaje */}
       <div className="bg-white rounded-lg mb-6">
         <div className="space-y-4">
           <div className="border-b border-gray-300 py-2">
@@ -84,8 +99,8 @@ export default function CharacterPage() {
             <dd className="text-gray-500">{character.species}</dd>
           </div>
           <div className="border-b border-gray-300 py-2">
-          <dt className="text-sm font-medium text-gray-900 mb-1">Status</dt>
-          <dd className="text-gray-500">{character.status}</dd>
+            <dt className="text-sm font-medium text-gray-900 mb-1">Status</dt>
+            <dd className="text-gray-500">{character.status}</dd>
           </div>
           <div className="border-b border-gray-300 py-2">
             <dt className="text-sm font-medium text-gray-900 mb-1">Gender</dt>
@@ -102,6 +117,7 @@ export default function CharacterPage() {
         </div>
       </div>
 
+      {/* Sección para comentarios sobre el personaje */}
       <CommentBox characterId={id || ''} />
     </div>
   );
