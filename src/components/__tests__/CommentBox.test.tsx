@@ -111,6 +111,78 @@ describe('CommentBox', () => {
     expect(mockAddComment).not.toHaveBeenCalled();
   });
 
+  // Verifica que no se permita enviar comentarios con menos de 3 caracteres
+  it('prevents submission of comments shorter than 3 characters', () => {
+    const mockAddComment = vi.fn();
+    vi.mocked(useComments).mockReturnValue({
+      comments: [],
+      addComment: mockAddComment,
+      deleteComment: vi.fn()
+    });
+
+    render(<CommentBox {...defaultProps} />);
+
+    const input = screen.getByPlaceholderText('Write a comment');
+    fireEvent.change(input, { target: { value: 'Hi' } }); // Solo 2 caracteres
+
+    const form = screen.getByRole('form');
+    fireEvent.submit(form);
+
+    expect(mockAddComment).not.toHaveBeenCalled();
+  });
+
+  // Verifica que se muestre el contador de caracteres
+  it('shows character counter and validation messages', () => {
+    vi.mocked(useComments).mockReturnValue({
+      comments: [],
+      addComment: vi.fn(),
+      deleteComment: vi.fn()
+    });
+
+    render(<CommentBox {...defaultProps} />);
+
+    const input = screen.getByPlaceholderText('Write a comment');
+    
+    // Estado inicial
+    expect(screen.getByText('Mínimo 3 caracteres')).toBeInTheDocument();
+    expect(screen.getByText('0/500')).toBeInTheDocument();
+
+    // Escribir 2 caracteres (insuficientes)
+    fireEvent.change(input, { target: { value: 'Hi' } });
+    expect(screen.getByText('Faltan 1 caracteres')).toBeInTheDocument();
+    expect(screen.getByText('2/500')).toBeInTheDocument();
+
+    // Escribir 3 caracteres (válido)
+    fireEvent.change(input, { target: { value: 'Hola' } });
+    expect(screen.getByText('Listo para enviar')).toBeInTheDocument();
+    expect(screen.getByText('4/500')).toBeInTheDocument();
+  });
+
+  // Verifica el botón está deshabilitado con comentarios inválidos
+  it('disables submit button for invalid comments', () => {
+    vi.mocked(useComments).mockReturnValue({
+      comments: [],
+      addComment: vi.fn(),
+      deleteComment: vi.fn()
+    });
+
+    render(<CommentBox {...defaultProps} />);
+
+    const input = screen.getByPlaceholderText('Write a comment');
+    const submitButton = screen.getByRole('button', { name: '' }); // Botón solo con ícono
+
+    // Inicialmente deshabilitado (vacío)
+    expect(submitButton).toBeDisabled();
+
+    // Con 2 caracteres (insuficientes) - sigue deshabilitado
+    fireEvent.change(input, { target: { value: 'Hi' } });
+    expect(submitButton).toBeDisabled();
+
+    // Con 3 caracteres (válido) - se habilita
+    fireEvent.change(input, { target: { value: 'Hola' } });
+    expect(submitButton).toBeEnabled();
+  });
+
   // Verifica el formateo de la fecha en español (dependiendo del locale configurado)
   it('formats date correctly in Spanish locale', () => {
     const testDate = new Date('2024-01-01T12:00:00.000Z');

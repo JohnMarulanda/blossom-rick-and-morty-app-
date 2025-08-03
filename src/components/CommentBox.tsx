@@ -15,12 +15,24 @@ export function CommentBox({ characterId }: CommentBoxProps) {
   const [error, setError] = useState('');           // Mensaje de error al agregar comentario
   const { comments, addComment, deleteComment } = useComments(characterId); // Hook personalizado
 
+  // Constantes de validación (deben coincidir con useComments)
+  const MIN_COMMENT_LENGTH = 3;
+  const MAX_COMMENT_LENGTH = 500;
+
+  // Verifica si el comentario es válido
+  const isCommentValid = () => {
+    const trimmedComment = newComment.trim();
+    return trimmedComment.length >= MIN_COMMENT_LENGTH && trimmedComment.length <= MAX_COMMENT_LENGTH;
+  };
+
   // Maneja el envío del formulario
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (newComment.trim()) {
+    const trimmedComment = newComment.trim();
+    
+    if (trimmedComment && isCommentValid()) {
       try {
-        addComment(newComment.trim()); // Intenta agregar comentario
+        addComment(trimmedComment); // Intenta agregar comentario
         setNewComment('');
         setError('');
       } catch (err) {
@@ -47,11 +59,33 @@ export function CommentBox({ characterId }: CommentBoxProps) {
           />
           <button
             type="submit"
-            disabled={!newComment.trim()}
+            disabled={!isCommentValid()}
             className="px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
             <Send className="w-5 h-5 text-white" />
           </button>
+        </div>
+        
+        {/* Contador de caracteres */}
+        <div className="flex justify-between items-center mt-2 text-xs">
+          <span className={`${
+            newComment.trim().length < MIN_COMMENT_LENGTH 
+              ? 'text-orange-500' 
+              : newComment.trim().length > MAX_COMMENT_LENGTH 
+                ? 'text-red-500' 
+                : 'text-green-600'
+          }`}>
+            {newComment.trim().length === 0 
+              ? `Mínimo ${MIN_COMMENT_LENGTH} caracteres` 
+              : newComment.trim().length < MIN_COMMENT_LENGTH
+                ? `Faltan ${MIN_COMMENT_LENGTH - newComment.trim().length} caracteres`
+                : 'Listo para enviar'}
+          </span>
+          <span className={`${
+            newComment.length > MAX_COMMENT_LENGTH ? 'text-red-500' : 'text-gray-500'
+          }`}>
+            {newComment.length}/{MAX_COMMENT_LENGTH}
+          </span>
         </div>
       </form>
 
