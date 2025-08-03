@@ -8,7 +8,7 @@ import { ArrowUpAZ, ArrowDownAZ } from 'lucide-react';
 import { HeartButton } from '../components/HeartButton';
 import { SearchField } from '../components/SearchField';
 import { FiltersBar } from '../components/FiltersBar';
-import { DeleteButton } from '../components/DeleteButton';	
+import { DeleteButton } from '../components/DeleteButton';
 
 export default function HomePage() {
   const { loading, error, data } = useCharacters();
@@ -17,7 +17,7 @@ export default function HomePage() {
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc');
   const [isFiltersOpen, setIsFiltersOpen] = useState(false);
   const [showDeleted, setShowDeleted] = useState(false);
-  
+
   const {
     search,
     setSearch,
@@ -40,20 +40,20 @@ export default function HomePage() {
       <p className="text-gray-600">Loading characters...</p>
     </div>
   );
-  
+
   if (error) return (
     <div className="flex flex-col items-center justify-center mt-8 p-6">
       <div className="bg-red-50 border border-red-200 rounded-lg p-4 max-w-md">
         <h3 className="text-red-800 font-semibold mb-2">Connection error</h3>
         <p className="text-red-700 text-sm mb-3">
-        Unable to connect to the Rick and Morty API.  
+          Unable to connect to the Rick and Morty API.
           This may be due to temporary server issues.
         </p>
         <p className="text-red-600 text-xs">
           Technical error: {error.message}
         </p>
-        <button 
-          onClick={() => window.location.reload()} 
+        <button
+          onClick={() => window.location.reload()}
           className="mt-3 px-4 py-2 bg-red-600 text-white rounded-md text-sm hover:bg-red-700 transition-colors"
         >
           Retry
@@ -65,7 +65,7 @@ export default function HomePage() {
   const allCharacters = data?.characters.results || [];
   const nonDeletedCharacters = filterDeletedCharacters(allCharacters);
   const filteredCharacters = applyFilters(nonDeletedCharacters, favorites);
-  
+
   const starredCharacters = filteredCharacters.filter(char => isFavorite(char.id));
   const deletedCharacters = allCharacters.filter(char => isDeleted(char.id));
   const otherCharacters = filteredCharacters.filter(char => !isFavorite(char.id));
@@ -80,7 +80,7 @@ export default function HomePage() {
         onFilterClick={() => setIsFiltersOpen(true)}
         isFiltersOpen={isFiltersOpen}
       />
-      
+
       <FiltersBar
         isOpen={isFiltersOpen}
         onClose={() => setIsFiltersOpen(false)}
@@ -96,7 +96,7 @@ export default function HomePage() {
         hasActiveFilters={hasActiveFilters()}
       />
 
-<div className="flex justify-between gap-2 mb-4">
+      <div className="flex justify-between gap-2 mb-4">
         {hasActiveFilters() && (
           <div className="text-xs font-medium text-blue-600">
             {filteredCharacters.length} Results
@@ -104,7 +104,7 @@ export default function HomePage() {
         )}
         {hasActiveFilters() && (
           <div className="px-2 py-1 rounded-3xl bg-secondary-600 bg-opacity-30 text-green-700 text-xs font-medium">
-            {Object.values([characterFilter, statusFilter, speciesFilter, genderFilter]).filter(f => f !== 'all').length} Filter
+            {Object.values([characterFilter, statusFilter, speciesFilter, genderFilter]).filter(f => f !== 'all').length} Filter{Object.values([characterFilter, statusFilter, speciesFilter, genderFilter]).filter(f => f !== 'all').length !== 1 ? 's' : ''}
           </div>
         )}
       </div>
@@ -117,19 +117,19 @@ export default function HomePage() {
           <ul className="list-none p-0">
             {sortedCharacters(starredCharacters, sortOrder).map((character) => (
               <li key={character.id} className="mb-4 border-b border-gray-300 pb-4">
-                <div className="flex items-center">
-                  <Link 
+                <div className="flex items-center flex-grow hover:bg-primary-100 p-2 rounded-lg transition-colors">
+                  <Link
                     to={`/character/${character.id}`}
-                    className="flex items-center flex-grow hover:bg-primary-100 p-2 rounded-lg transition-colors"
+                    className="flex items-center flex-grow"
                   >
                     <img src={character.image} alt={character.name} width={32} height={32} className="rounded-full mr-4" />
                     <div className="flex-grow">
                       <strong className="block text-sm">{character.name}</strong>
-                      <div className="text-gray-500 text-sm">
-                        {character.species}
-                      </div>
+                      <div className="text-gray-500 text-sm">{character.species}</div>
                     </div>
-                  <div className="flex items-center gap-2">
+                  </Link>
+
+                  <div className="flex items-center gap-2 ml-2">
                     <HeartButton
                       characterId={character.id}
                       isFavorite={isFavorite(character.id)}
@@ -141,14 +141,14 @@ export default function HomePage() {
                       onToggle={toggleDelete}
                     />
                   </div>
-                  </Link>
                 </div>
+
               </li>
             ))}
           </ul>
         </div>
       )}
-      
+
       <div className="flex items-center justify-between mb-4">
         <h2 className="text-xs font-semibold text-gray-500">
           CHARACTERS ({otherCharacters.length})
@@ -165,39 +165,39 @@ export default function HomePage() {
           <span className="text-xs">{sortOrder === 'asc' ? 'A-Z' : 'Z-A'}</span>
         </button>
       </div>
-      
+
       <ul className="list-none p-0">
         {sortedCharacters(otherCharacters, sortOrder).map((character) => (
           <li key={character.id} className="mb-4 border-b border-gray-300 pb-4">
-            <div className="flex items-center">
-              <Link 
+            <div className="flex items-center flex-grow hover:bg-primary-100 p-2 rounded-lg transition-colors">
+              <Link
                 to={`/character/${character.id}`}
-                className="flex items-center flex-grow hover:bg-primary-100 p-2 rounded-lg transition-colors"
+                className="flex items-center flex-grow"
               >
                 <img src={character.image} alt={character.name} width={32} height={32} className="rounded-full mr-4" />
                 <div className="flex-grow">
                   <strong className="block text-sm">{character.name}</strong>
-                  <div className="text-gray-500 text-sm">
-                    {character.species}
-                  </div>
-                </div>
-                <div className="flex items-center gap-2">
-                  <HeartButton
-                    characterId={character.id}
-                    isFavorite={isFavorite(character.id)}
-                    onToggle={toggleFavorite}
-                  />
-                  <DeleteButton
-                    characterId={character.id}
-                    isDeleted={isDeleted(character.id)}
-                    onToggle={toggleDelete}
-                  />
+                  <div className="text-gray-500 text-sm">{character.species}</div>
                 </div>
               </Link>
+
+              <div className="flex items-center gap-2 ml-2">
+                <HeartButton
+                  characterId={character.id}
+                  isFavorite={isFavorite(character.id)}
+                  onToggle={toggleFavorite}
+                />
+                <DeleteButton
+                  characterId={character.id}
+                  isDeleted={isDeleted(character.id)}
+                  onToggle={toggleDelete}
+                />
+              </div>
             </div>
+
           </li>
-          ))}
-       </ul>
+        ))}
+      </ul>
 
       {deletedCharacters.length > 0 && (
         <div className="mt-8">
@@ -230,25 +230,31 @@ export default function HomePage() {
             <ul className="list-none p-0">
               {deletedCharacters.map((character) => (
                 <li key={character.id} className="mb-4 border-b border-gray-300 pb-4">
-                  <div className="flex items-center">
-                    <Link 
+                  <div className="flex items-center hover:bg-primary-100 p-2 rounded-lg transition-colors">
+                    <Link
                       to={`/character/${character.id}`}
-                      className="flex items-center flex-grow hover:bg-primary-100 p-2 rounded-lg transition-colors"
+                      className="flex items-center flex-grow"
                     >
-                      <img src={character.image} alt={character.name} width={32} height={32} className="rounded-full mr-4" />
+                      <img
+                        src={character.image}
+                        alt={character.name}
+                        width={32}
+                        height={32}
+                        className="rounded-full mr-4"
+                      />
                       <div className="flex-grow">
                         <strong className="block text-sm">{character.name}</strong>
-                        <div className="text-gray-500 text-sm">
-                          {character.species}
-                        </div>
+                        <div className="text-gray-500 text-sm">{character.species}</div>
                       </div>
-                        <DeleteButton
-                          characterId={character.id}
-                          isDeleted={isDeleted(character.id)}
-                          onToggle={toggleDelete}
-                        />
                     </Link>
+
+                    <DeleteButton
+                      characterId={character.id}
+                      isDeleted={isDeleted(character.id)}
+                      onToggle={toggleDelete}
+                    />
                   </div>
+
                 </li>
               ))}
             </ul>
