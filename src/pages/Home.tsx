@@ -167,8 +167,8 @@ export default function HomePage() {
           </h2>
           <ul className="list-none p-0">
             {sortedCharacters(starredCharacters, sortOrder).map((character) => (
-              <li key={character.id} className="mb-4 border-b border-gray-300 pb-4">
-                <div className="flex items-center flex-grow hover:bg-primary-100 p-2 rounded-lg transition-colors">
+              <li key={character.id} className="border-b border-gray-300">
+                <div className="flex items-center flex-grow hover:bg-primary-100 p-4 rounded-lg transition-colors">
                   <Link
                     to={`/character/${character.id}`}
                     className="flex items-center flex-grow"
@@ -293,8 +293,8 @@ export default function HomePage() {
           {showDeleted && (
             <ul className="list-none p-0">
               {deletedCharacters.map((character) => (
-                <li key={character.id} className="mb-4 border-b border-gray-300 pb-4">
-                  <div className="flex items-center hover:bg-primary-100 p-2 rounded-lg transition-colors">
+                <li key={character.id} className="border-b border-gray-300">
+                  <div className="flex items-center hover:bg-primary-100 p-4 rounded-lg transition-colors">
                     <Link to={`/character/${character.id}`} className="flex items-center flex-grow">
                       <img src={character.image} alt={character.name} width={32} height={32} className="rounded-full mr-4" />
                       <div className="flex-grow">
