@@ -8,13 +8,19 @@ type CommentBoxProps = {
 
 export function CommentBox({ characterId }: CommentBoxProps) {
   const [newComment, setNewComment] = useState('');
+  const [error, setError] = useState('');
   const { comments, addComment, deleteComment } = useComments(characterId);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (newComment.trim()) {
-      addComment(newComment.trim());
-      setNewComment('');
+      try {
+        addComment(newComment.trim());
+        setNewComment('');
+        setError('');
+      } catch (err) {
+        setError(err instanceof Error ? err.message : 'Error al agregar comentario');
+      }
     }
   };
 
@@ -40,6 +46,12 @@ export function CommentBox({ characterId }: CommentBoxProps) {
           </button>
         </div>
       </form>
+
+      {error && (
+        <div className="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded-lg">
+          {error}
+        </div>
+      )}
 
       <div className="space-y-4">
         {comments.length === 0 ? (

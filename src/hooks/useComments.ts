@@ -20,9 +20,21 @@ export const useComments = (characterId: string) => {
   }, [comments]);
 
   const addComment = (text: string) => {
+    const MAX_COMMENT_LENGTH = 500;
+    if (text.length > MAX_COMMENT_LENGTH) {
+      throw new Error(`El comentario no puede exceder ${MAX_COMMENT_LENGTH} caracteres`);
+    }
+    
+    const sanitizedText = text
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#x27;')
+      .replace(/\//g, '&#x2F;');
+    
     const newComment: Comment = {
       id: crypto.randomUUID(),
-      text,
+      text: sanitizedText,
       characterId,
       createdAt: new Date().toISOString()
     };
