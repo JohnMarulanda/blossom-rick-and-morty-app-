@@ -1,4 +1,4 @@
-import { X } from 'lucide-react';
+import { X, ArrowLeft } from 'lucide-react';
 
 interface FiltersBarProps {
   isOpen: boolean;
@@ -82,17 +82,33 @@ export function FiltersBar({
     </div>
   );
 
+
+  const isMobile = window.innerWidth < 768;
+
   return (
-    <div className="relative bg-white rounded-lg shadow-lg border border-gray-200 mt-2 z-50">
+    <div className={`bg-white z-50 ${isMobile ? 'fixed inset-0 overflow-y-auto' : 'relative rounded-lg shadow-lg border border-gray-200 mt-2'}`}>
       <div className="p-4">
-        <div className="flex items-center justify-between mb-4">
-          <h2 className="text-lg font-semibold text-gray-900">Filters</h2>
-          <button
-            onClick={onClose}
-            className="p-1 text-gray-400 hover:text-gray-600 transition-colors rounded-full hover:bg-gray-100"
-          >
-            <X className="w-5 h-5" />
-          </button>
+        <div className="flex items-center justify-between mb-4 relative">
+          <div className="flex items-center justify-center w-full relative">
+            {isMobile && (
+              <button
+                onClick={onClose}
+                className="absolute left-0 p-2 rounded-full text-primary-600 hover:bg-primary-200 transition-colors"
+                aria-label="Volver a la lista de personajes"
+              >
+                <ArrowLeft className="w-5 h-5" />
+              </button>
+            )}
+            <h2 className="flex text-lg font-semibold text-gray-900">Filters</h2>
+          </div>
+          {!isMobile && (
+            <button
+              onClick={onClose}
+              className="absolute right-4 top-4 p-1 text-gray-400 hover:text-gray-600 transition-colors rounded-full hover:bg-gray-100"
+            >
+              <X className="w-5 h-5" />
+            </button>
+          )}
         </div>
         
         <div className="space-y-4 mb-6">
@@ -125,19 +141,21 @@ export function FiltersBar({
           />
         </div>
         <div className="sticky bottom-0 bg-white border-t border-gray-200 p-4">
-          <button
-            onClick={() => {
-              onApplyFilters();
-              onClose();
-            }}
-            className={`w-full px-4 py-2.5 text-sm font-medium rounded-lg transition-all duration-200 focus:outline-none focus:ring-2 ${
-              hasActiveFilters
-                ? 'bg-primary-600 text-white hover:bg-primary-700 focus:ring-primary-200'
-                : 'bg-gray-100 text-gray-600 hover:bg-gray-200 focus:ring-gray-200'
-            }`}
-          >
-            Filter
-          </button>
+          <div className="flex gap-3">
+            <button
+              onClick={() => {
+                onApplyFilters();
+                onClose();
+              }}
+              className={`flex-1 px-4 py-2.5 text-sm font-medium rounded-lg transition-all duration-200 focus:outline-none focus:ring-2 ${
+                hasActiveFilters
+                  ? 'bg-primary-600 text-white hover:bg-primary-700 focus:ring-primary-200'
+                  : 'bg-gray-100 text-gray-600 hover:bg-gray-200 focus:ring-gray-200'
+              }`}
+            >
+              Filter
+            </button>
+          </div>
         </div>
       </div>
     </div>
