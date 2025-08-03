@@ -4,7 +4,7 @@ import { useCharacters, sortedCharacters } from '../hooks/useCharacters';
 import { useFavorites } from '../hooks/useFavorites';
 import { useFilters } from '../hooks/useFilters';
 import { useSoftDelete } from '../hooks/useSoftDelete';
-import { ArrowUpAZ, ArrowDownAZ } from 'lucide-react';
+import { ArrowUpAZ, ArrowDownAZ, ArrowLeft } from 'lucide-react';
 import { HeartButton } from '../components/HeartButton';
 import { SearchField } from '../components/SearchField';
 import { FiltersBar } from '../components/FiltersBar';
@@ -32,6 +32,9 @@ export default function HomePage() {
     applyFilters,
     applyPendingFilters,
     hasActiveFilters,
+    filtersApplied,
+    setFiltersApplied,
+    clearFilters,
   } = useFilters();
 
   if (loading) return (
@@ -74,28 +77,58 @@ export default function HomePage() {
     <div className="p-4">
       <h1 className="text-2xl font-bold pt-6">Rick and Morty list</h1>
 
-      <SearchField
-        value={search}
-        onChange={setSearch}
-        onFilterClick={() => setIsFiltersOpen(true)}
-        isFiltersOpen={isFiltersOpen}
-      />
+      {!filtersApplied ? (
+        <>
+          <SearchField
+            value={search}
+            onChange={setSearch}
+            onFilterClick={() => setIsFiltersOpen(true)}
+            isFiltersOpen={isFiltersOpen}
+          />
 
-      <FiltersBar
-        isOpen={isFiltersOpen}
-        onClose={() => setIsFiltersOpen(false)}
-        characterFilter={characterFilter}
-        setCharacterFilter={setCharacterFilter}
-        speciesFilter={speciesFilter}
-        setSpeciesFilter={setSpeciesFilter}
-        statusFilter={statusFilter}
-        setStatusFilter={setStatusFilter}
-        genderFilter={genderFilter}
-        setGenderFilter={setGenderFilter}
-        onApplyFilters={applyPendingFilters}
-        hasActiveFilters={hasActiveFilters()}
-      />
+          <FiltersBar
+            isOpen={isFiltersOpen}
+            onClose={() => setIsFiltersOpen(false)}
+            characterFilter={characterFilter}
+            setCharacterFilter={setCharacterFilter}
+            speciesFilter={speciesFilter}
+            setSpeciesFilter={setSpeciesFilter}
+            statusFilter={statusFilter}
+            setStatusFilter={setStatusFilter}
+            genderFilter={genderFilter}
+            setGenderFilter={setGenderFilter}
+            onApplyFilters={applyPendingFilters}
+            hasActiveFilters={hasActiveFilters()}
+          />
+        </>
+      ) : (
+        <div className="mt-4 mb-6">
+          <div className="flex items-center w-[100%] text-center justify-between border-b pb-2">
+            <button 
+              type="button"
+              onClick={() => {
+                setFiltersApplied(false);
+                clearFilters();
+              }}
+              className="flex items-center justify-center p-1"
+            >
+              <ArrowLeft className="w-5 h-5" />
+            </button>
+            <h3 className="text-base text-left py-5">Advanced search</h3>
+            <button 
+              type="button"
+              onClick={() => {
+                setFiltersApplied(false);
+                clearFilters();
+              }}
+            >
+              <h3 className="text-base text-right" style={{ color: "rgb(128, 84, 199)" }}>Done</h3>
+            </button>
+          </div>
+          
 
+        </div>
+      )}
       <div className="flex justify-between gap-2 mb-4">
         {hasActiveFilters() && (
           <div className="text-xs font-medium text-blue-600">

@@ -22,6 +22,8 @@ export const useFilters = () => {
   const [appliedSpeciesFilter, setAppliedSpeciesFilter] = useState('all');
   const [appliedGenderFilter, setAppliedGenderFilter] = useState('all');
 
+  const [filtersApplied, setFiltersApplied] = useState(false);
+
   const clearFilters = () => {
     setSearch('');
     setPendingCharacterFilter('all');
@@ -32,6 +34,7 @@ export const useFilters = () => {
     setAppliedStatusFilter('all');
     setAppliedSpeciesFilter('all');
     setAppliedGenderFilter('all');
+    setFiltersApplied(false);
   };
 
   const applyPendingFilters = () => {
@@ -39,6 +42,7 @@ export const useFilters = () => {
     setAppliedStatusFilter(pendingStatusFilter);
     setAppliedSpeciesFilter(pendingSpeciesFilter);
     setAppliedGenderFilter(pendingGenderFilter);
+    setFiltersApplied(true);
   };
 
   const hasActiveFilters = () => {
@@ -83,5 +87,7 @@ export const useFilters = () => {
     applyFilters: filterCharacters,
     applyPendingFilters,
     hasActiveFilters,
+    filtersApplied,
+    setFiltersApplied
   };
 };
