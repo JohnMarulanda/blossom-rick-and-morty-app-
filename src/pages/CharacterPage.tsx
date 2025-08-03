@@ -2,6 +2,7 @@ import { useParams } from 'react-router-dom';
 import { useCharacter } from '../hooks/useCharacters';
 import { useFavorites } from '../hooks/useFavorites';
 import { HeartButton } from '../components/HeartButton';
+import { CommentBox } from '../components/CommentBox';
 
 export default function CharacterPage() {
   const { id } = useParams<{ id: string }>();
@@ -42,8 +43,8 @@ export default function CharacterPage() {
   }
 
   return (
-    <div className="p-4">
-      <div className="flex flex-col items-start mb-8 ">
+    <div className="px-24">
+      <div className="flex flex-col items-start pb-4 pt-10">
         <div className="relative mb-3">
           <img
             src={character.image}
@@ -61,30 +62,32 @@ export default function CharacterPage() {
         <h1 className="text-2xl font-bold text-gray-900">{character.name}</h1>
       </div>
 
-      <div className="bg-white rounded-lgp-6 mb-6">
+      <div className="bg-white rounded-lg mb-6">
         <div className="space-y-4">
-          <div className="border-b border-gray-300 pb-3">
+          <div className="border-b border-gray-300 py-2">
             <dt className="text-sm font-medium text-gray-900 mb-1">Species</dt>
             <dd className="text-gray-500">{character.species}</dd>
           </div>
-          <div className="border-b border-gray-300 pb-3">
+          <div className="border-b border-gray-300 py-2">
           <dt className="text-sm font-medium text-gray-900 mb-1">Status</dt>
           <dd className="text-gray-500">{character.status}</dd>
           </div>
-          <div className="border-b border-gray-300 pb-3">
+          <div className="border-b border-gray-300 py-2">
             <dt className="text-sm font-medium text-gray-900 mb-1">Gender</dt>
             <dd className="text-gray-500">{character.gender}</dd>
           </div>
-          <div className="border-b border-gray-300 pb-3">
+          <div className="border-b border-gray-300 py-2">
             <dt className="text-sm font-medium text-gray-900 mb-1">Origin</dt>
             <dd className="text-gray-500">{character.origin?.name || 'Unknown'}</dd>
           </div>
-          <div className="border-b border-gray-300 pb-3">
+          <div className="border-b border-gray-300 py-2">
             <dt className="text-sm font-medium text-gray-900 mb-1">Location</dt>
             <dd className="text-gray-500">{character.location?.name || 'Unknown'}</dd>
           </div>
         </div>
       </div>
+
+      <CommentBox characterId={id || ''} />
     </div>
   );
 }
