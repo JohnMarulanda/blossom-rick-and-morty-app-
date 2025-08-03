@@ -34,11 +34,18 @@ export const useComments = (characterId: string) => {
    * El texto se sanitiza para prevenir XSS básico.
    * 
    * @param text Contenido del comentario
-   * @throws Error si el comentario excede los 500 caracteres
+   * @throws Error si el comentario es menor a 3 caracteres o excede los 500 caracteres
    */
   const addComment = (text: string) => {
-    const MAX_COMMENT_LENGTH = 500;
+    const MIN_COMMENT_LENGTH = 3;   // Mínimo 3 caracteres
+    const MAX_COMMENT_LENGTH = 500; // Máximo 500 caracteres
 
+    // Validación de longitud mínima
+    if (text.length < MIN_COMMENT_LENGTH) {
+      throw new Error(`El comentario debe tener al menos ${MIN_COMMENT_LENGTH} caracteres`);
+    }
+
+    // Validación de longitud máxima
     if (text.length > MAX_COMMENT_LENGTH) {
       throw new Error(`El comentario no puede exceder ${MAX_COMMENT_LENGTH} caracteres`);
     }
