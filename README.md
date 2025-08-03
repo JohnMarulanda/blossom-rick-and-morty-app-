@@ -506,3 +506,65 @@ Este proyecto está bajo la Licencia MIT. Ver el archivo `LICENSE` para más det
 
 - [Rick and Morty API](https://rickandmortyapi.com/) por proporcionar la API GraphQL
 - [Blossom](https://www.blossom.net/) por la oportunidad de seguir creciendo
+
+
+# ✅ Checklist de Evaluación - Frontend Developer (Rick & Morty App)
+
+## 🔹 Tecnologías obligatorias
+
+| Tecnología           | Requisito                         | Cumplido |
+|----------------------|------------------------------------|----------|
+| React 18             | Uso de React 18                    | ✅       |
+| GraphQL              | Uso de la API GraphQL              | ✅       |
+| React Router DOM     | Navegación entre vistas            | ✅       |
+| TailwindCSS          | Estilizado con TailwindCSS         | ✅       |
+
+---
+
+## 🔹 Requisitos funcionales
+
+| Funcionalidad                               | Descripción                                                             | Cumplido |
+|---------------------------------------------|-------------------------------------------------------------------------|----------|
+| Listado de personajes                       | Tarjetas con nombre, imagen y especie                                   | ✅       |
+| Responsive                                   | Uso correcto de position, flex y grid                                   | ✅       |
+| Ordenamiento A-Z / Z-A                      | Ordenar personajes por nombre                                           | ✅       |
+| Detalles por personaje                      | Página individual con detalles usando React Router                      | ✅       |
+| Favoritos                                   | Marcar personajes como favoritos                                        | ✅       |
+| Comentarios                                 | Agregar comentarios a cada personaje                                    | ✅       |
+| Apariencia visual / Usabilidad              | Diseño siguiendo mockups, coherente y usable                            | ✅       |
+
+---
+
+## 🔹 Requisitos opcionales (bonus)
+
+| Funcionalidad opcional                      | Descripción                                                             | Cumplido |
+|---------------------------------------------|-------------------------------------------------------------------------|----------|
+| TypeScript                                  | Proyecto desarrollado con TypeScript                                    | ✅       |
+| Soft delete                                 | Posibilidad de eliminar personajes de forma lógica (no permanente)      | ✅       |
+| Búsqueda por estado                         | Filtro por estado (`Alive`, `Dead`, `Unknown`)                          | ✅       |
+| Búsqueda por especie                        | Filtro por especie                                                      | ✅       |
+| Búsqueda por género                         | Filtro por género                                                       | ✅       |
+| Tests unitarios (mínimo 3)                  | Al menos 3 componentes o layouts con pruebas unitarias                  | ✅       |
+
+---
+
+## 🔹 Entregables
+
+| Entregable                                  | Descripción                                                             | Cumplido |
+|---------------------------------------------|-------------------------------------------------------------------------|----------|
+| Repositorio público                         | Código fuente en GitHub                                                 | ✅       |
+| README o Wiki                               | Instrucciones de ejecución y uso de la API                              | ✅       |
+
+---
+
+## 🔹 Criterios de evaluación
+
+| Criterio                                     | Descripción                                                             | Cumplido |
+|---------------------------------------------|-------------------------------------------------------------------------|----------|
+| Cumplimiento general                        | Se cumplen los requisitos principales                                   | ✅       |
+| Uso correcto de tecnologías                 | React 18, GraphQL, Router, TailwindCSS                                  | ✅       |
+| Usabilidad y diseño                         | Aplicación usable y atractiva                                           | ✅       |
+| Manejo de Git                               | Commits limpios, ramas, mensajes claros                                 | ✅       |
+| Calidad de código                           | Legibilidad, estructura, reutilización                                  | ✅       |
+| Calidad de estilos                          | Tailwind bien aplicado, componentes reutilizables, consistencia visual  | ✅       |
+
