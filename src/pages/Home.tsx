@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { useCharacters, sortedCharacters } from '../hooks/useCharacters';
 import { useFavorites } from '../hooks/useFavorites';
 import { useFilters } from '../hooks/useFilters';
@@ -24,10 +24,19 @@ export default function HomePage() {
   // Maneja eliminación suave (soft delete)
   const { toggleDelete, isDeleted, filterDeletedCharacters } = useSoftDelete();
 
+  // Hook para detectar la ruta actual
+  const location = useLocation();
+
   // Estado local para ordenar, mostrar filtros y personajes eliminados
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc');
   const [isFiltersOpen, setIsFiltersOpen] = useState(false);
   const [showDeleted, setShowDeleted] = useState(false);
+
+  // Función para detectar si un personaje está actualmente seleccionado
+  // basándose en la URL actual para mantener el fondo resaltado
+  const isCharacterSelected = (characterId: number): boolean => {
+    return location.pathname === `/character/${characterId}`;
+  };
 
   // Filtros avanzados personalizados
   const {
@@ -168,7 +177,11 @@ export default function HomePage() {
           <ul className="list-none p-0">
             {sortedCharacters(starredCharacters, sortOrder).map((character) => (
               <li key={character.id} className="border-b border-gray-300">
-                <div className="flex items-center flex-grow hover:bg-primary-100 p-4 rounded-lg transition-colors">
+                <div className={`flex items-center flex-grow p-4 rounded-lg transition-colors ${
+                  isCharacterSelected(character.id) 
+                    ? 'bg-primary-100' 
+                    : 'hover:bg-primary-100'
+                }`}>
                   <Link
                     to={`/character/${character.id}`}
                     className="flex items-center flex-grow"
@@ -234,7 +247,11 @@ export default function HomePage() {
           <ul className="list-none p-0">
         {sortedCharacters(otherCharacters, sortOrder).map((character) => (
           <li key={character.id} className="border-b border-gray-300">
-            <div className="flex items-center flex-grow hover:bg-primary-100 p-4 rounded-lg transition-colors">
+            <div className={`flex items-center flex-grow p-4 rounded-lg transition-colors ${
+              isCharacterSelected(character.id) 
+                ? 'bg-primary-100' 
+                : 'hover:bg-primary-100'
+            }`}>
               <Link to={`/character/${character.id}`} className="flex items-center flex-grow">
                 <img src={character.image} alt={character.name} width={32} height={32} className="rounded-full mr-4" />
                 <div className="flex-grow">
@@ -294,7 +311,11 @@ export default function HomePage() {
             <ul className="list-none p-0">
               {deletedCharacters.map((character) => (
                 <li key={character.id} className="border-b border-gray-300">
-                  <div className="flex items-center hover:bg-primary-100 p-4 rounded-lg transition-colors">
+                  <div className={`flex items-center p-4 rounded-lg transition-colors ${
+                    isCharacterSelected(character.id) 
+                      ? 'bg-primary-100' 
+                      : 'hover:bg-primary-100'
+                  }`}>
                     <Link to={`/character/${character.id}`} className="flex items-center flex-grow">
                       <img src={character.image} alt={character.name} width={32} height={32} className="rounded-full mr-4" />
                       <div className="flex-grow">
